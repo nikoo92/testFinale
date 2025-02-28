@@ -15,5 +15,9 @@ public interface OrdineService {
     OrdineDTO saveOrdine (OrdineDTO ordineDTO);
 
     OrdineDTO updateStatoOrdine(Long ordineId, String nuovoStato);
+
+    Double getTotalByUtenteId(Long uId);
+
+    List<OrdineDTO> getOrdineDate(LocalDate startDate, LocalDate endDate);
 }
 

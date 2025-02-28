@@ -46,7 +46,7 @@ public class OrdineServiceImpl implements OrdineService {
         ordine.setStato(ordineDTO.getStato());
 
 
-        if (ordineDTO.getUtente() != null && ordineDTO.getUtente().getId() != null) {
+        if (ordineDTO.getUtente() != null && ordineDTO.getUtente()!= null) {
             Utente utente = utenteRepository.findById(ordineDTO.getUtente().getId())
                     .orElseThrow(() -> new RuntimeException("Utente non trovato"));
             ordine.setUtente(utente);
@@ -104,5 +104,19 @@ public class OrdineServiceImpl implements OrdineService {
         ordine.setStato(nuovoStato);
         ordine = ordineRepository.save(ordine);
         return ordineMapper.toDto(ordine);
+    }
+
+    @Override
+    public Double getTotalByUtenteId(Long utenteId) {
+        List<Ordine> ordini = ordineRepository.findByUtenteId(utenteId);
+
+        return ordini.stream()
+                .mapToDouble(ordine -> ordine.getTotale())
+                .sum();
+    }
+
+
+    public List<OrdineDTO> getOrdineDate(LocalDate startDate, LocalDate endDate) {
+        return ordineRepository.findByDataBetween(startDate, endDate).stream().map(ordineMapper::toDto).collect(Collectors.toList());
     }
 }
